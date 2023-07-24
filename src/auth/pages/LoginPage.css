@@ -20,12 +20,12 @@
   border-radius: 0 0 5px 5px;
   box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 9px 26px 0 rgba(0, 0, 0, 0.19);
   padding: 5%;
-  background: #0062cc;
+  background: #fff;
 }
 
 .login-form-2 h3{
   text-align: center;
-  color: #fff;
+  color: #333;
 }
 
 .login-container form{
@@ -62,6 +62,11 @@
   background-color: #0062cc;
 }
 
+.login-form-2 .btnSubmit{
+  color: #fff;
+  background-color: #0062cc;
+}
+
 .login-form-2 .ForgetPwd{
   color: #fff;
   font-weight: 600;
@@ -74,21 +79,21 @@
   text-decoration: none;
 }
 
-.label-white {
+/* .label-white {
   background-color: #fff !important;
   color: #000 !important;
   padding: 0 6px 0 6px !important;
   border-radius: 5px !important;
-}
+} */
 
-.btn-blur{
+/* .btn-blur{
   width: 100%;
   background: rgba(255, 255, 255, .25);
 	-webkit-backdrop-filter: blur(5px);
 	backdrop-filter: blur(5px);
   border: 1px solid rgba(209, 213, 219, 0.3);
   color: #fff;
-}
+} */
 
 .img-contain{
   position: absolute;
@@ -102,14 +107,14 @@
   transform: translatey(-0%);
   transition: transform 0.75s ease-in-out;
   border-radius: 0.25rem 0.25rem 0 0;
-  height: 42%;
+  height: 49%;
 }
 
 #switch:not(:checked) ~ .img-contain{
-  transform: translatey(75%);
+  transform: translatey(92.5%);
   transition: transform 0.75s ease-in-out;
   border-radius: 0 0 0.25rem 0.25rem;
-  height: 55%;
+  height: 52%;
 }
 
 .img-calendar{
@@ -140,12 +145,65 @@
   }
 }
 
-.label-login:hover{
-  color: #333;
+.label-underlined:hover{
+  color: #0062cc;
   transition: transform 2s ease-in-out;
 }
 
-.label-register:hover{
-  color: #0062cc;
-  transition: transform 2s ease-in-out;
+.btn-github, .btn-google{
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  border-radius: 0.25rem;
+  padding: 0.375rem 0.75rem;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-google{
+  color: #333;
+  background-color: #fff;
+  border: 1px solid #333;
+}
+
+.btn-github{
+  color: #fff;
+}
+
+.icon-key{
+  display: flex;
+}
+
+.label-key{
+  display: none;
+}
+
+@media (min-width: 480px) { 
+  .icon-key{
+    display: none;
+  }
+  
+  .label-key{
+    display: flex;
+  }
+}
+
+@media (min-width: 768px) { 
+  .icon-key{
+    display: flex;
+  }
+  
+  .label-key{
+    display: none;
+  }
+}
+
+@media (min-width: 1023px) { 
+  .label-key{
+    display: flex;
+  }
+  
+  .icon-key{
+    display: none;
+  }
 }

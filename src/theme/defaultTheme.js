@@ -13,7 +13,7 @@ export const defaultTheme = createTheme({
       main: "#fff",
     },
     dark: {
-      main: "#000",
+      main: "#333",
     },
     primary: {
       light: '#757ce8',
