@@ -107,14 +107,17 @@
   transform: translatey(-0%);
   transition: transform 0.75s ease-in-out;
   border-radius: 0.25rem 0.25rem 0 0;
-  height: 49%;
+  /* height: 49%; */
+  height: 46%;
 }
 
 #switch:not(:checked) ~ .img-contain{
-  transform: translatey(92.5%);
+  /* transform: translatey(92.5%); */
+  transform: translatey(85.5%);
   transition: transform 0.75s ease-in-out;
   border-radius: 0 0 0.25rem 0.25rem;
-  height: 52%;
+  /* height: 52%; */
+  height: 54%;
 }
 
 .img-calendar{

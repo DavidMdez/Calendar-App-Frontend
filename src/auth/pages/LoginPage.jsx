@@ -7,7 +7,7 @@ import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { ShowPassword } from '../components/ShowPassword';
 
 import googleUrl from '../../img/icons/google.png';
-import githubUrl from '../../img/icons/github.png';
+// import githubUrl from '../../img/icons/github.png';
 import './LoginPage.css';
 
 export const LoginPage = () => {
@@ -109,14 +109,14 @@ export const LoginPage = () => {
                 </div>
               </div>
 
-              <div className="form-group mb-3">
+              {/* <div className="form-group mb-3">
                 <div
                   className="btn-github d-flex align-items-center bg-dark"
                 >
                   <img src={githubUrl} alt="github" width={'20px'}/>
                   <span className='d-flex align-items-center justify-content-center' style={{ flexWrap: 'wrap', width: '100%' }}> Continuar con Github</span>
                 </div>
-              </div>
+              </div> */}
               
               <div className='text-dark d-flex' style={{ justifyContent: 'center', flexWrap: 'wrap' }} >
                 No tienes una cuenta?
