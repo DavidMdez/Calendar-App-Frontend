@@ -1,14 +1,16 @@
-import { addHours, differenceInSeconds } from 'date-fns';
 import { useState } from 'react';
+import { useMemo } from 'react';
+import Modal from 'react-modal';
 
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css'
 
-import Modal from 'react-modal';
-import DatePicker, { registerLocale } from "react-datepicker";
+import { addHours, differenceInSeconds } from 'date-fns';
+import DatePicker, { registerLocale } from 'react-datepicker';
 import es from 'date-fns/locale/es';
-import "react-datepicker/dist/react-datepicker.css";
-import { useMemo } from 'react';
+import 'react-datepicker/dist/react-datepicker.css';
+
+import { useUiStore } from '../../hooks';
 
 registerLocale('es', es);
 
@@ -26,7 +28,7 @@ const customStyles = {
 Modal.setAppElement('#root');
 
 export const CalendarModal = () => {
-  const [isOpen, setIsOpen] = useState(true);
+  const { isDateModalOpen, closeDateModal } = useUiStore();
   const [formSubmitted, setFormSubmitted] = useState(false);
 
   const [formValues, setFormValues] = useState({
@@ -37,15 +39,15 @@ export const CalendarModal = () => {
   });
 
   const titleClass = useMemo(() => {
-    if ( !formSubmitted ) return '';
-    
-    return ( formValues.title.trim().length <= 0 ) 
-      ? 'is-invalid' 
+    if (!formSubmitted) return '';
+
+    return (formValues.title.trim().length <= 0)
+      ? 'is-invalid'
       : '';
   }, [formValues.title, formSubmitted]);
 
   const dateStartClass = useMemo(() => {
-    if ( !formSubmitted ) return '';
+    if (!formSubmitted) return '';
 
     return (!formValues.start)
       ? 'is-invalid'
@@ -53,11 +55,11 @@ export const CalendarModal = () => {
   }, [formValues.start, formSubmitted]);
 
   const dateEndClass = useMemo(() => {
-    if ( !formSubmitted ) return '';
+    if (!formSubmitted) return '';
 
     const diference = differenceInSeconds(formValues.end, formValues.start);
 
-    return (!formValues.end || isNaN(diference) || diference <= 0 )
+    return (!formValues.end || isNaN(diference) || diference <= 0)
       ? 'is-invalid'
       : '';
   }, [formValues.end, formValues.start, formSubmitted]);
@@ -76,34 +78,30 @@ export const CalendarModal = () => {
     });
   }
 
-  const onCloseModal = () => {
-    setIsOpen(false);
-  }
-
   const onSubmit = (e) => {
     e.preventDefault();
     setFormSubmitted(true);
 
     const diference = differenceInSeconds(formValues.end, formValues.start);
-    
-    if( isNaN(diference) || diference <= 0 ) {
+
+    if (isNaN(diference) || diference <= 0) {
       Swal.fire(
-        'Fechas Incorectas', 
-        'Revisa las fechas del evento', 
+        'Fechas Incorectas',
+        'Revisa las fechas del evento',
         'error'
       );
       return;
     }
 
-    if( formValues.title.trim().length <= 0 ) return;
+    if (formValues.title.trim().length <= 0) return;
 
     console.log(formValues);
   }
 
   return (
     <Modal
-      isOpen={isOpen}
-      onRequestClose={onCloseModal}
+      isOpen={isDateModalOpen}
+      onRequestClose={closeDateModal}
       style={customStyles}
       className="modal"
       overlayClassName="modal-fondo"
@@ -113,69 +111,69 @@ export const CalendarModal = () => {
       <hr />
       <form onSubmit={onSubmit} className="container">
 
-          <div className="form-group mb-2 d-flex flex-column">
-              <label className='d-flex'>Fecha y hora inicio</label>
-              <DatePicker 
-                selected={formValues.start}
-                onChange={(e) => onDateChange(e, 'start')}
-                className={`form-control ${dateStartClass}`}
-                dateFormat="dd/MM/yyyy HH:mm"
-                showTimeSelect
-                locale="es"
-                timeCaption='Hora'
-              />
-          </div>
+        <div className="form-group mb-2 d-flex flex-column">
+          <label className='d-flex'>Fecha y hora inicio</label>
+          <DatePicker
+            selected={formValues.start}
+            onChange={(e) => onDateChange(e, 'start')}
+            className={`form-control ${dateStartClass}`}
+            dateFormat="dd/MM/yyyy HH:mm"
+            showTimeSelect
+            locale="es"
+            timeCaption='Hora'
+          />
+        </div>
 
-          <div className="form-group mb-2 d-flex flex-column">
-              <label>Fecha y hora fin</label>
-              <DatePicker
-                minDate={formValues.start ?? new Date()}
-                minTime={formValues.start ?? new Date()}
-                maxTime={new Date(formValues.start ?? new Date()).setHours(23, 59, 59)}
-                selected={formValues.end}
-                onChange={(e) => onDateChange(e, 'end')}
-                className={`form-control ${dateEndClass}`}
-                dateFormat="dd/MM/yyyy HH:mm"
-                showTimeSelect
-                locale="es"
-              />
-          </div>
+        <div className="form-group mb-2 d-flex flex-column">
+          <label>Fecha y hora fin</label>
+          <DatePicker
+            minDate={formValues.start ?? new Date()}
+            minTime={formValues.start ?? new Date()}
+            maxTime={new Date(formValues.start ?? new Date()).setHours(23, 59, 59)}
+            selected={formValues.end}
+            onChange={(e) => onDateChange(e, 'end')}
+            className={`form-control ${dateEndClass}`}
+            dateFormat="dd/MM/yyyy HH:mm"
+            showTimeSelect
+            locale="es"
+          />
+        </div>
 
-          <hr />
-          <div className="form-group mb-2">
-              <label>Titulo y notas</label>
-              <input 
-                  type="text" 
-                  className={`form-control ${titleClass}`}
-                  placeholder="Título del evento"
-                  name="title"
-                  autoComplete="off"
-                  value={formValues.title}
-                  onChange={onInputChange}
-              />
-              <small id="emailHelp" className="form-text text-muted">Una descripción corta</small>
-          </div>
+        <hr />
+        <div className="form-group mb-2">
+          <label>Titulo y notas</label>
+          <input
+            type="text"
+            className={`form-control ${titleClass}`}
+            placeholder="Título del evento"
+            name="title"
+            autoComplete="off"
+            value={formValues.title}
+            onChange={onInputChange}
+          />
+          <small id="emailHelp" className="form-text text-muted">Una descripción corta</small>
+        </div>
 
-          <div className="form-group mb-2">
-              <textarea 
-                  type="text" 
-                  className="form-control"
-                  placeholder="Notas"
-                  rows="5"
-                  name="notes"
-                  value={formValues.notes}
-                  onChange={onInputChange}
-              ></textarea>
-              <small id="emailHelp" className="form-text text-muted">Información adicional</small>
-          </div>
+        <div className="form-group mb-2">
+          <textarea
+            type="text"
+            className="form-control"
+            placeholder="Notas"
+            rows="5"
+            name="notes"
+            value={formValues.notes}
+            onChange={onInputChange}
+          ></textarea>
+          <small id="emailHelp" className="form-text text-muted">Información adicional</small>
+        </div>
 
-          <button
-              type="submit"
-              className="btn btn-outline-primary btn-block"
-          >
-              <i className="far fa-save"></i>
-              <span> Guardar</span>
-          </button>
+        <button
+          type="submit"
+          className="btn btn-outline-primary btn-block"
+        >
+          <i className="far fa-save"></i>
+          <span> Guardar</span>
+        </button>
 
       </form>
     </Modal>
