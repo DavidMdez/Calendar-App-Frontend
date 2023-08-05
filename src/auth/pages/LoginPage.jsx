@@ -9,13 +9,30 @@ import { ShowPassword } from '../components/ShowPassword';
 import googleUrl from '../../img/icons/google.png';
 // import githubUrl from '../../img/icons/github.png';
 import './LoginPage.css';
+import { useForm } from '../../hooks';
+
+const loginFormFields = {
+  loginEmail: '',
+  loginPassword: '',
+}
+
+const registerFormFields = {
+  registerName: '',
+  registerEmail: '',
+  registerPassword: '',
+  registerPasswordConfirm: '',
+}
 
 export const LoginPage = () => {
-  const [selectRegister, setSelectRegister] = useState(false);
+  const { loginEmail, loginPassword, onInputChange:onLoginInputChange } = useForm(loginFormFields);
+  const { registerName, registerEmail, registerPassword, registerPasswordConfirm, onInputChange:onRegisterInputChange } = useForm(registerFormFields);
 
+  const [selectRegister, setSelectRegister] = useState(false);
   const [showPasswordLogin, setShowPasswordLogin] = useState(false);
+  
   const [showPasswordRegister, setShowPasswordRegister] = useState(false);
   const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
+  
   const [remenber, setRemenber] = useState(false);
 
   const onSelectRegister = () => {
@@ -36,20 +53,32 @@ export const LoginPage = () => {
     setRemenber(!remenber)
   }
 
+  const loginSubmit = (e) => {
+    event.preventDefault();
+    console.log({ loginEmail, loginPassword });
+  }
+
+  const registerSubmit = (e) => {
+    event.preventDefault();
+    console.log({ registerName, registerEmail, registerPassword, registerPasswordConfirm });
+  }
+
   return (
     <div className='bg-dark px-4 screen-style'>
       <div className="container login-container">
         <div className="row" style={{ position: 'relative' }}>
           <div className="col-md-6 login-form-1 bg-white">
             <h3>Ingreso</h3>
-            <form>
+            <form onSubmit={loginSubmit}>
               <div className="mb-3">
                 <TextField
                   label="Correo"
                   variant="outlined"
                   fullWidth
-                  name="email"
-                  autoComplete="username"
+                  name="loginEmail"
+                  value={loginEmail}
+                  onChange={onLoginInputChange}
+                  autoComplete="email"
                   InputLabelProps={{
                     style: { backgroundColor: "#fff", paddingRight: '6px', paddingLeft: '6px', borderRadius: '4px', },
                   }}
@@ -63,7 +92,9 @@ export const LoginPage = () => {
                   variant="outlined"
                   fullWidth
                   autoComplete="current-password"
-                  name="password"
+                  name="loginPassword"
+                  value={loginPassword}
+                  onChange={onLoginInputChange}
                   inputProps={{
                     style: { paddingRight: '2.625rem' }
                   }}
@@ -139,13 +170,16 @@ export const LoginPage = () => {
 
           <div className="col-md-6 login-form-2">
             <h3>Registro</h3>
-            <form>
+            <form onSubmit={registerSubmit}>
               <div className="form-group mb-3">
                 <TextField
                   label="Nombre"
                   variant="outlined"
                   fullWidth
-                  name="name"
+                  name="registerName"
+                  autoComplete="email"
+                  value={registerName}
+                  onChange={onRegisterInputChange}
                   InputLabelProps={{
                     style: { backgroundColor: "#fff", paddingRight: '6px', paddingLeft: '6px', borderRadius: '4px', },
                   }}
@@ -156,7 +190,9 @@ export const LoginPage = () => {
                   label="Email"
                   variant="outlined"
                   fullWidth
-                  name="email"
+                  name="registerEmail"
+                  value={registerEmail}
+                  onChange={onRegisterInputChange}
                   autoComplete="email"
                   InputLabelProps={{
                     style: { backgroundColor: "#fff", paddingRight: '6px', paddingLeft: '6px', borderRadius: '4px', },
@@ -169,7 +205,9 @@ export const LoginPage = () => {
                   label="Contraseña"
                   variant="outlined"
                   fullWidth
-                  name="password"
+                  name="registerPassword"
+                  value={registerPassword}
+                  onChange={onRegisterInputChange}
                   autoComplete="new-password"
                   InputLabelProps={{
                     style: { backgroundColor: "#fff", paddingRight: '6px', paddingLeft: '6px', borderRadius: '4px', },
@@ -184,7 +222,9 @@ export const LoginPage = () => {
                   label="Confirme la contraseña"
                   variant="outlined"
                   fullWidth
-                  name="passworConfirm"
+                  name="registerPasswordConfirm"
+                  value={registerPasswordConfirm}
+                  onChange={onRegisterInputChange}
                   autoComplete="new-password"
                   InputLabelProps={{
                     style: { backgroundColor: "#fff", paddingRight: '6px', paddingLeft: '6px', borderRadius: '4px', },
