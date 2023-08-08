@@ -72,6 +72,11 @@ export const useAuthStore = () => {
     }
   }
 
+  const startLogout = () => {
+    localStorage.clear();
+    dispatch( onLogout() );
+  }
+
 
   return {
     //* Properties
@@ -79,8 +84,9 @@ export const useAuthStore = () => {
     user,
     errorMessage,
     //* Methods
-    startLogin,
-    startRegister,
     checkAuthToken,
+    startLogin,
+    startLogout,
+    startRegister,
   }
 }
