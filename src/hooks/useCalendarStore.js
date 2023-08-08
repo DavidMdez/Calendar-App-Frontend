@@ -15,8 +15,6 @@ export const useCalendarStore = () => {
   }
 
   const startSavingEvent = async (calendarEvent) => {
-    // Todo: Update event or create new event
-
     try {
       if (calendarEvent.id) {
         // Actualizar
@@ -30,14 +28,25 @@ export const useCalendarStore = () => {
     }
 
     // Crear
-    const { data } = await calendarApi.post('./events', calendarEvent);
-    dispatch(onAddNewEvent({ ...calendarEvent, id: data.event.id, user }));
+    try {
+      const { data } = await calendarApi.post('./events', calendarEvent);
+      dispatch(onAddNewEvent({ ...calendarEvent, id: data.event.id, user }));
+    } catch (error) {
+      console.log(error);
+      Swal.fire('Error al guardar', 'Error en el servidor', 'error');
+    }
 
   }
 
   const startDeletingEvent = async () => {
-    // Todo: llegar al backend
-    dispatch(onDeleteEvent());
+    try {      
+      await calendarApi.delete(`/events/${activeEvent.id}`);
+      dispatch(onDeleteEvent());
+
+    } catch (error) {
+      console.log(error);
+      Swal.fire('Error al eliminar', error.response.data.msg, 'error');
+    }
   }
 
   const startLoadingEvents = async () => {
