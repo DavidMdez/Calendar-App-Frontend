@@ -1,32 +1,33 @@
 import { useDispatch, useSelector } from "react-redux"
 import { calendarApi } from "../api";
 import { clearErrorMessage, onChecking, onLogin, onLogout } from "../store/auth/authSlice";
+import { onLogoutCalendar } from "../store";
 
 export const useAuthStore = () => {
   const { status, user, errorMessage } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
   const startLogin = async ({ email, password }) => {
-    dispatch( onChecking() );
+    dispatch(onChecking());
 
     try {
       const { data } = await calendarApi.post("/auth", { email, password });
-      
+
       localStorage.setItem("token", data.token);
       localStorage.setItem("token-init-date", new Date().getTime());
 
-      dispatch( onLogin({ name: data.name, uid: data.uid }) );
+      dispatch(onLogin({ name: data.name, uid: data.uid }));
     } catch (error) {
-      dispatch( onLogout('Usuario y Contraseña no son correctos') );
-      
+      dispatch(onLogout('Usuario y Contraseña no son correctos'));
+
       setTimeout(() => {
-        dispatch( clearErrorMessage() );
+        dispatch(clearErrorMessage());
       }, 10);
     }
   }
 
   const startRegister = async ({ name, email, password }) => {
-    dispatch( onChecking() );
+    dispatch(onChecking());
 
     try {
       const { data } = await calendarApi.post("/auth/new", { name, email, password });
@@ -34,47 +35,48 @@ export const useAuthStore = () => {
       localStorage.setItem("token", data.token);
       localStorage.setItem("token-init-date", new Date().getTime());
 
-      dispatch( onLogin({ name: data.name, uid: data.uid }) );
+      dispatch(onLogin({ name: data.name, uid: data.uid }));
 
     } catch (error) {
-      if( error.response.data.errors ) {
-        dispatch( onLogout( Object.values( error.response.data.errors )[0].msg ) );
+      if (error.response.data.errors) {
+        dispatch(onLogout(Object.values(error.response.data.errors)[0].msg));
       }
       else {
-        dispatch( onLogout( error.response.data?.msg || 'Ocurrio un Error!' ) );
+        dispatch(onLogout(error.response.data?.msg || 'Ocurrio un Error!'));
       }
 
       setTimeout(() => {
-        dispatch( clearErrorMessage() );
+        dispatch(clearErrorMessage());
       }, 10);
     }
   }
 
   const checkAuthToken = async () => {
     const token = localStorage.getItem("token");
-    
-    if( !token ) {
-      return dispatch( onLogout() );
+
+    if (!token) {
+      return dispatch(onLogout());
     }
 
     try {
       const { data } = await calendarApi.get("/auth/renew");
-      
+
       localStorage.setItem("token", data.token);
       localStorage.setItem("token-init-date", new Date().getTime());
 
-      dispatch( onLogin({ name: data.name, uid: data.uid }) );
+      dispatch(onLogin({ name: data.name, uid: data.uid }));
 
     } catch (error) {
-      console.log({error});
+      console.log({ error });
       localStorage.clear();
-      return dispatch( onLogout() );
+      return dispatch(onLogout());
     }
   }
 
   const startLogout = () => {
     localStorage.clear();
-    dispatch( onLogout() );
+    dispatch(onLogoutCalendar());
+    dispatch(onLogout());
   }
 
   return {

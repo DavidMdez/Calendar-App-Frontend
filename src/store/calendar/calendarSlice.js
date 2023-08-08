@@ -46,14 +46,26 @@ export const calendarSlice = createSlice({
       state.isLoadingEvents = false;
       // state.events = payload;
       payload.forEach(event => {
-        const exists = state.events.some( dbEvent => dbEvent.id === event.id );
+        const exists = state.events.some(dbEvent => dbEvent.id === event.id);
 
-        if ( !exists ) {
+        if (!exists) {
           state.events.push(event);
         }
       });
     },
+    onLogoutCalendar: (state) => {
+      state.isLoadingEvents = true;
+      state.events = [];
+      state.activeEvent = null;
+    },
   },
 })
 
-export const { onSetActiveEnent, onAddNewEvent, onUpdateEvent, onDeleteEvent, onLoadEvents } = calendarSlice.actions;
+export const {
+  onAddNewEvent,
+  onDeleteEvent,
+  onLoadEvents,
+  onLogoutCalendar,
+  onSetActiveEnent,
+  onUpdateEvent,
+} = calendarSlice.actions;
