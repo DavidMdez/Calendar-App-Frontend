@@ -9,4 +9,15 @@ const calendarApi = axios.create({
 
 // Todo: configure axios interceptors
 
+calendarApi.interceptors.request.use((config) => {
+  
+  config.headers = {
+    ...config.headers,
+    'x-token': localStorage.getItem('token')
+  }
+
+  return config;
+});
+
+
 export default calendarApi;

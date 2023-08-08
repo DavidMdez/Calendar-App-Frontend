@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import TextField from '@mui/material/TextField';
 import VpnKeyIcon from '@mui/icons-material/VpnKey';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
@@ -9,7 +9,8 @@ import { ShowPassword } from '../components/ShowPassword';
 import googleUrl from '../../img/icons/google.png';
 // import githubUrl from '../../img/icons/github.png';
 import './LoginPage.css';
-import { useForm } from '../../hooks';
+import { useAuthStore, useForm } from '../../hooks';
+import Swal from 'sweetalert2';
 
 const loginFormFields = {
   loginEmail: '',
@@ -24,6 +25,9 @@ const registerFormFields = {
 }
 
 export const LoginPage = () => {
+
+  const { startLogin, errorMessage, startRegister } = useAuthStore();
+
   const { loginEmail, loginPassword, onInputChange:onLoginInputChange } = useForm(loginFormFields);
   const { registerName, registerEmail, registerPassword, registerPasswordConfirm, onInputChange:onRegisterInputChange } = useForm(registerFormFields);
 
@@ -54,14 +58,37 @@ export const LoginPage = () => {
   }
 
   const loginSubmit = (e) => {
-    event.preventDefault();
-    console.log({ loginEmail, loginPassword });
+    e.preventDefault();
+    startLogin({ email: loginEmail, password: loginPassword }); 
   }
 
   const registerSubmit = (e) => {
-    event.preventDefault();
-    console.log({ registerName, registerEmail, registerPassword, registerPasswordConfirm });
+    e.preventDefault();
+
+    if(registerPassword !== registerPasswordConfirm) {
+      Swal.fire({
+        title: 'Error!',
+        text: 'Las contraseñas no coinciden',
+        icon: 'error',
+        confirmButtonText: 'Ok'
+      })
+      return;
+    }
+
+    startRegister({ name: registerName, email: registerEmail, password: registerPassword });
   }
+
+  useEffect(() => {
+    if (errorMessage !== undefined ) {
+      Swal.fire({
+        title: 'Error!',
+        text: errorMessage,
+        icon: 'error',
+        confirmButtonText: 'Ok'
+      })
+    }
+  }, [errorMessage])
+
 
   return (
     <div className='bg-dark px-4 screen-style'>
@@ -79,6 +106,7 @@ export const LoginPage = () => {
                   value={loginEmail}
                   onChange={onLoginInputChange}
                   autoComplete="email"
+                  type='email'
                   InputLabelProps={{
                     style: { backgroundColor: "#fff", paddingRight: '6px', paddingLeft: '6px', borderRadius: '4px', },
                   }}
@@ -177,7 +205,7 @@ export const LoginPage = () => {
                   variant="outlined"
                   fullWidth
                   name="registerName"
-                  autoComplete="email"
+                  autoComplete="username"
                   value={registerName}
                   onChange={onRegisterInputChange}
                   InputLabelProps={{
@@ -191,6 +219,7 @@ export const LoginPage = () => {
                   variant="outlined"
                   fullWidth
                   name="registerEmail"
+                  type='email'
                   value={registerEmail}
                   onChange={onRegisterInputChange}
                   autoComplete="email"
