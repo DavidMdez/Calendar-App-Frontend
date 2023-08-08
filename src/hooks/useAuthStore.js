@@ -77,7 +77,6 @@ export const useAuthStore = () => {
     dispatch( onLogout() );
   }
 
-
   return {
     //* Properties
     status,

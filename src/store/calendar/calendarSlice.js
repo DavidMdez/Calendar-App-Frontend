@@ -1,23 +1,24 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { addHours } from 'date-fns';
+// import { addHours } from 'date-fns';
 
 
-const tempEvents = {
-  _id: new Date().getTime(),
-  title: 'My event',
-  notes: 'Notes',
-  start: new Date(),
-  end: addHours(new Date(), 2),
-  user: {
-    _id: '123',
-    name: 'Fernando',
-  }
-}
+// const tempEvents = {
+//   _id: new Date().getTime(),
+//   title: 'My event',
+//   notes: 'Notes',
+//   start: new Date(),
+//   end: addHours(new Date(), 2),
+//   user: {
+//     _id: '123',
+//     name: 'Fernando',
+//   }
+// }
 
 export const calendarSlice = createSlice({
   name: 'calendar',
   initialState: {
-    events: [tempEvents],
+    isLoadingEvents: true,
+    events: [],
     activeEvent: null,
   },
   reducers: {
@@ -30,18 +31,29 @@ export const calendarSlice = createSlice({
     },
     onUpdateEvent: (state, { payload }) => {
       state.events = state.events.map(
-        event => event._id === payload._id ? payload : event
+        event => event.id === payload.id ? payload : event
       );
     },
     onDeleteEvent: (state) => {
       if (state.activeEvent) {
         state.events = state.events.filter(
-          event => event._id !== state.activeEvent._id
+          event => event.id !== state.activeEvent.id
         );
         state.activeEvent = null;
       }
     },
+    onLoadEvents: (state, { payload = [] }) => {
+      state.isLoadingEvents = false;
+      // state.events = payload;
+      payload.forEach(event => {
+        const exists = state.events.some( dbEvent => dbEvent.id === event.id );
+
+        if ( !exists ) {
+          state.events.push(event);
+        }
+      });
+    },
   },
 })
 
-export const { onSetActiveEnent, onAddNewEvent, onUpdateEvent, onDeleteEvent } = calendarSlice.actions;
+export const { onSetActiveEnent, onAddNewEvent, onUpdateEvent, onDeleteEvent, onLoadEvents } = calendarSlice.actions;
